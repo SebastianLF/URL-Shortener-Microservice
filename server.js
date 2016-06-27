@@ -1,4 +1,12 @@
 var express = require('express');
+
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/url-shortener');
+require('./models/Url');
+
+const Url = mongoose.model('url');
+
 var app = express();
 
 app.get('/*', (req, res) => {
@@ -10,7 +18,7 @@ app.listen('3000');
 
 const parseUrl = url => {
 	console.log(url)
-	
+
 	if (checkShort(url))
 		redirectTo(url)
 	else if (checkUrl(url))
@@ -20,7 +28,9 @@ const parseUrl = url => {
 }
 
 const shortUrl = url => {
-	// Ecrire l'URL dans la BDD
+	const newUrl = new Url({ original_url: url, short_url: +Date.now() });
+  newUrl.save();
+  return newUrl;
 }
 
 const redirectTo = shortUrl => {
