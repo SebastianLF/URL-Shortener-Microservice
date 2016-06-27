@@ -28,7 +28,7 @@ const parseUrl = url => {
 }
 
 const shortUrl = url => {
-	const newUrl = new Url({ original_url: url, short_url: +Date.now() });
+	const newUrl = new Url({ original_url: url, short_url: 'http://localhost/'+Date.now() });
   newUrl.save();
   return newUrl;
 }
