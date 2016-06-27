@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/zelol/URL-Shortener-Microservice#readme",
   "dependencies": {
+    "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "mongodb": "^2.1.18",
     "mongoose": "^4.5.2"

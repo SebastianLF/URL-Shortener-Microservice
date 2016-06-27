@@ -1,8 +1,9 @@
 var express = require('express');
-
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/url-shortener');
+require('dotenv').config();
+
+mongoose.connect(process.env.MONGO_URI);
 require('./models/Url');
 
 const Url = mongoose.model('url');
@@ -11,7 +12,6 @@ var app = express();
 
 app.get('/*', (req, res) => {
   res.send('URL SHORTENER MICROSERVICE');
-  parseUrl(req.url.substring(1))
 });
 
 app.listen('3000');
@@ -28,7 +28,7 @@ const parseUrl = url => {
 }
 
 const shortUrl = url => {
-	const newUrl = new Url({ original_url: url, short_url: 'http://localhost/'+Date.now() });
+	const newUrl = new Url({ original_url: url, short_url: process.env.BASE_URI + Date.now() });
   newUrl.save();
   return newUrl;
 }
