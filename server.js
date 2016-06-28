@@ -31,9 +31,11 @@ app.listen(process.env.PORT);
 
 // fonctions.
 const parseUrl = (url, req, res) => {
-	if (checkShort(url))
-		redirectTo(url)
-	else if (checkUrl(url)){
+	if (checkShort(url)) {
+		const originalUrl = redirectTo(url);
+    res.redirect(originalUrl);
+  }
+	else if (checkUrl(url)) {
     const newUrl = shortUrl(url);
     res.json(newUrl)
   }
@@ -56,8 +58,10 @@ const shortUrl = url => {
   return newUrl;
 }
 
-const redirectTo = (shortUrl, req, res) => {
-	res.redirect()
+const redirectTo = (shortUrlId) => {
+  Url.findOne({short_url_id: shortUrlId}, (err, url) => {
+    return url.original_url;
+  });
 }
 
 const sendErr = error => {
