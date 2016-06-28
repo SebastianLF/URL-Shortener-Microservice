@@ -12,9 +12,12 @@ const Url = mongoose.model('url');
 
 // création du seveur.
 var app = express();
+
+// gestion de template.
 app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'ejs');
 
+// routes
 app.get('/', (req, res) => {
   res.render('index');
 });
@@ -23,6 +26,7 @@ app.get('/*', (req, res) => {
   parseUrl(req.url.substr(1), req, res)
 });
 
+// ecoute du serveur.
 app.listen(process.env.PORT);
 
 // fonctions.
@@ -46,14 +50,14 @@ const checkUrl = url => {
 }
 
 const shortUrl = url => {
-  const newUrl = new Url({ original_url: url, short_url: process.env.BASE_URI + Date.now() });
+  const shortUrl_id = Date.now();
+  const newUrl = new Url({ original_url: url, short_url: process.env.BASE_URI + shortUrl_id, short_url_id: shortUrl_id });
   newUrl.save();
   return newUrl;
 }
 
-const redirectTo = shortUrl => {
-	console.log('redirect')
-	// Lire dans la BDD l'URL
+const redirectTo = (shortUrl, req, res) => {
+	res.redirect()
 }
 
 const sendErr = error => {
