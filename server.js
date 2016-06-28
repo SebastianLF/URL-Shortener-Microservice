@@ -1,5 +1,6 @@
 var express = require('express');
 var mongoose = require('mongoose');
+var path = require('path');
 
 // Chargement des variables d'environnement situés dans le fichier '.env'.
 require('dotenv').config();
@@ -11,13 +12,19 @@ const Url = mongoose.model('url');
 
 // création du seveur.
 var app = express();
+app.set('views', path.join(__dirname, './views'));
+app.set('view engine', 'ejs');
+
+app.get('/', (req, res) => {
+  res.render('index');
+});
 
 app.get('/*', (req, res) => {
   parseUrl(req.url.substr(1))
   res.send('URL SHORTENER MICROSERVICE');
 });
 
-app.listen('3000');
+app.listen(process.env.PORT);
 
 // fonctions.
 const parseUrl = url => {
@@ -49,5 +56,5 @@ const redirectTo = shortUrl => {
 }
 
 const sendErr = error => {
-	res.send({ error })
+  console.log(error);
 }
