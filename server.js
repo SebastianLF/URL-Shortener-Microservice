@@ -20,18 +20,19 @@ app.get('/', (req, res) => {
 });
 
 app.get('/*', (req, res) => {
-  parseUrl(req.url.substr(1))
-  res.send('URL SHORTENER MICROSERVICE');
+  parseUrl(req.url.substr(1), req, res)
 });
 
 app.listen(process.env.PORT);
 
 // fonctions.
-const parseUrl = url => {
+const parseUrl = (url, req, res) => {
 	if (checkShort(url))
 		redirectTo(url)
-	else if (checkUrl(url))
-		shortUrl(url)
+	else if (checkUrl(url)){
+    const newUrl = shortUrl(url);
+    res.json(newUrl)
+  }
 	else
 		sendErr('invalid request')
 }
