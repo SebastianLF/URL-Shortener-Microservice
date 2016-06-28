@@ -1,25 +1,26 @@
 var express = require('express');
 var mongoose = require('mongoose');
 
+// Chargement des variables d'environnement situés dans le fichier '.env'.
 require('dotenv').config();
 
+// Connexion à la bnase de données mongodb.
 mongoose.connect(process.env.MONGO_URI);
 require('./models/Url');
-
 const Url = mongoose.model('url');
 
+// création du seveur.
 var app = express();
 
 app.get('/*', (req, res) => {
-  res.send('URL SHORTENER MICROSERVICE');
   parseUrl(req.url.substr(1))
+  res.send('URL SHORTENER MICROSERVICE');
 });
 
 app.listen('3000');
 
+// fonctions.
 const parseUrl = url => {
-	console.log(url)
-
 	if (checkShort(url))
 		redirectTo(url)
 	else if (checkUrl(url))
@@ -50,4 +51,3 @@ const redirectTo = shortUrl => {
 const sendErr = error => {
 	res.send({ error })
 }
-
