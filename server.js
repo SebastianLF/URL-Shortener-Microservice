@@ -32,15 +32,19 @@ app.listen(process.env.PORT);
 // fonctions.
 const parseUrl = (url, req, res) => {
 	if (checkShort(url)) {
-		const originalUrl = redirectTo(url);
-    res.redirect(originalUrl);
+		redirectTo(url, link => {console.log(link)
+      if (link !== null)
+        res.redirect(301, link)
+      else
+        res.send('no link found')
+    })
   }
 	else if (checkUrl(url)) {
     const newUrl = shortUrl(url);
     res.json(newUrl)
   }
 	else
-		sendErr('invalid request')
+		res.send('invalid request')
 }
 
 const checkShort = url => {
@@ -58,12 +62,11 @@ const shortUrl = url => {
   return newUrl;
 }
 
-const redirectTo = (shortUrlId) => {
+const redirectTo = (shortUrlId, callback) => {
   Url.findOne({short_url_id: shortUrlId}, (err, url) => {
-    return url.original_url;
-  });
-}
-
-const sendErr = error => {
-  console.log(error);
+    if (url !== null)
+      callback(url.original_url)
+    else
+      callback(null)
+  })
 }
